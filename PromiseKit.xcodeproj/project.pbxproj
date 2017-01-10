@@ -6,6 +6,20 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		85ADAEEE1E254F3100F3F8CD /* PromiseKit-Universal */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 85ADAEEF1E254F3100F3F8CD /* Build configuration list for PBXAggregateTarget "PromiseKit-Universal" */;
+			buildPhases = (
+				85ADAEF21E254F4D00F3F8CD /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = "PromiseKit-Universal";
+			productName = "PromiseKit-Universal";
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		6314112B1D5978D700E24B9E /* PromiseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B0AC571D595E1B00FA21D9 /* PromiseKit.framework */; };
 		631411311D5978EB00E24B9E /* PMKDefaultDispatchQueueTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635D641B1D59635300BC0AF5 /* PMKDefaultDispatchQueueTest.swift */; };
@@ -508,6 +522,11 @@
 						LastSwiftMigration = 0800;
 						ProvisioningStyle = Automatic;
 					};
+					85ADAEEE1E254F3100F3F8CD = {
+						CreatedOnToolsVersion = 8.2;
+						DevelopmentTeam = GVVK9DUB7W;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = 6399A3751D595D9100D65233 /* Build configuration list for PBXProject "PromiseKit" */;
@@ -527,9 +546,26 @@
 				631411321D59795700E24B9E /* PMKBridgeTests */,
 				630019011D596292003B4E30 /* PMKCoreTests */,
 				631411121D5978D700E24B9E /* PMKDispatchTests */,
+				85ADAEEE1E254F3100F3F8CD /* PromiseKit-Universal */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		85ADAEF21E254F4D00F3F8CD /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "######################\n# Options\n######################\n\nREVEAL_ARCHIVE_IN_FINDER=false\n\n# FRAMEWORK_NAME=\"${PROJECT_NAME}\"\n\nFRAMEWORK_NAME=\"PromiseKit\"\nSCHEME_NAME=\"PromiseKit\"\n\nSIMULATOR_LIBRARY_PATH=\"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${FRAMEWORK_NAME}.framework\"\n\nDEVICE_LIBRARY_PATH=\"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${FRAMEWORK_NAME}.framework\"\n\nUNIVERSAL_LIBRARY_DIR=\"${BUILD_DIR}/${CONFIGURATION}-iphoneuniversal\"\n\nFRAMEWORK=\"${UNIVERSAL_LIBRARY_DIR}/${FRAMEWORK_NAME}.framework\"\n\n######################\n# Build Frameworks\n######################\n\nxcodebuild -workspace ../DSSBridge.xcworkspace -scheme ${SCHEME_NAME} -sdk iphonesimulator -configuration ${CONFIGURATION} clean build CONFIGURATION_BUILD_DIR=${BUILD_DIR}/${CONFIGURATION}-iphonesimulator 2>&1 ARCHS=\"x86_64\" ONLY_ACTIVE_ARCH=NO\n\nxcodebuild -workspace ../DSSBridge.xcworkspace -scheme ${SCHEME_NAME} -sdk iphoneos -configuration ${CONFIGURATION} clean build CONFIGURATION_BUILD_DIR=${BUILD_DIR}/${CONFIGURATION}-iphoneos 2>&1\n\n\n######################\n# Create directory for universal\n######################\n\nrm -rf \"${UNIVERSAL_LIBRARY_DIR}\"\n\nmkdir \"${UNIVERSAL_LIBRARY_DIR}\"\n\nmkdir \"${FRAMEWORK}\"\n\n######################\n# Copy files Framework\n######################\n\necho \"${DEVICE_LIBRARY_PATH}\"\n\ncp -r \"${DEVICE_LIBRARY_PATH}/.\" \"${FRAMEWORK}\"\n\n######################\n# Make an universal binary\n######################\n\nlipo \"${SIMULATOR_LIBRARY_PATH}/${FRAMEWORK_NAME}\" \"${DEVICE_LIBRARY_PATH}/${FRAMEWORK_NAME}\" -create -output \"${FRAMEWORK}/${FRAMEWORK_NAME}\" | echo\n\n# For Swift framework, Swiftmodule needs to be copied in the universal framework\n# if [ -d \"${SIMULATOR_LIBRARY_PATH}/Modules/${FRAMEWORK_NAME}.swiftmodule/\" ]; then\n# cp -f \"${SIMULATOR_LIBRARY_PATH}/Modules/${FRAMEWORK_NAME}.swiftmodule/*\" \"${FRAMEWORK}/Modules/${FRAMEWORK_NAME}.swiftmodule/\" | echo\n# fi\n\n# if [ -d \"${DEVICE_LIBRARY_PATH}/Modules/${FRAMEWORK_NAME}.swiftmodule/\" ]; then\n# cp -f \"${DEVICE_LIBRARY_PATH}/Modules/${FRAMEWORK_NAME}.swiftmodule/*\" \"${FRAMEWORK}/Modules/${FRAMEWORK_NAME}.swiftmodule/\" | echo\n# fi\n\n######################\n# On Release, copy the result to rFRAMEWORK_NAMEelease directory\n######################\n# OUTPUT_DIR=\"${PROJECT_DIR}/Output/${FRAMEWORK_NAME}-${CONFIGURATION}-iphoneuniversal/\"\nOUTPUT_DIR=\"${PROJECT_DIR}/../../../lib/ios/\"\n\nrm -rf \"${OUTPUT_DIR}/${FRAMEWORK}\"\n\nmkdir -p \"$OUTPUT_DIR/${FRAMEWORK_NAME}.framework\"\n\ncp -r \"${FRAMEWORK}\" \"${OUTPUT_DIR}/\"\n\nif [ ${REVEAL_ARCHIVE_IN_FINDER} = true ]; then\nopen \"${OUTPUT_DIR}/\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		630019021D596292003B4E30 /* Sources */ = {
@@ -897,6 +933,22 @@
 			};
 			name = Release;
 		};
+		85ADAEF01E254F3100F3F8CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = GVVK9DUB7W;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		85ADAEF11E254F3100F3F8CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = GVVK9DUB7W;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -953,6 +1005,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		85ADAEEF1E254F3100F3F8CD /* Build configuration list for PBXAggregateTarget "PromiseKit-Universal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				85ADAEF01E254F3100F3F8CD /* Debug */,
+				85ADAEF11E254F3100F3F8CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
